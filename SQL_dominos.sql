@@ -10,17 +10,26 @@ SET
 -- -----------------------------------------------------
 -- Schema mydb
 -- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema dominos
+-- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema dominos
 -- -----------------------------------------------------
+<<<<<<< HEAD:dominos_er_script.sql
 CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8;
 USE
 `mydb` ;
+=======
+CREATE SCHEMA IF NOT EXISTS `dominos` DEFAULT CHARACTER SET utf8 ;
+USE `dominos` ;
+>>>>>>> a4e0cb0335596278e0a3f323204e5ce8d14d9c25:SQL_dominos.sql
 
 -- -----------------------------------------------------
--- Table `mydb`.`users`
+-- Table `dominos`.`users`
 -- -----------------------------------------------------
+<<<<<<< HEAD:dominos_er_script.sql
 CREATE TABLE IF NOT EXISTS `mydb`.`users`
 (
     `id`
@@ -54,11 +63,24 @@ CREATE TABLE IF NOT EXISTS `mydb`.`users`
     `id`
 ))
     ENGINE = InnoDB;
+=======
+CREATE TABLE IF NOT EXISTS `dominos`.`users` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `first_name` VARCHAR(45) NOT NULL,
+  `last_name` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(150) NOT NULL,
+  `password` VARCHAR(150) NOT NULL,
+  `phone_number` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+>>>>>>> a4e0cb0335596278e0a3f323204e5ce8d14d9c25:SQL_dominos.sql
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`addresses`
+-- Table `dominos`.`addresses`
 -- -----------------------------------------------------
+<<<<<<< HEAD:dominos_er_script.sql
 CREATE TABLE IF NOT EXISTS `mydb`.`addresses`
 (
     `id`
@@ -95,11 +117,25 @@ CREATE TABLE IF NOT EXISTS `mydb`.`addresses`
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
     ENGINE = InnoDB;
+=======
+CREATE TABLE IF NOT EXISTS `dominos`.`addresses` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `address_name` VARCHAR(150) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `users_addresses_fk_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `users_addresses_fk`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `dominos`.`users` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+>>>>>>> a4e0cb0335596278e0a3f323204e5ce8d14d9c25:SQL_dominos.sql
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`orders`
+-- Table `dominos`.`ingredients`
 -- -----------------------------------------------------
+<<<<<<< HEAD:dominos_er_script.sql
 CREATE TABLE IF NOT EXISTS `mydb`.`orders`
 (
     `id`
@@ -159,11 +195,43 @@ CREATE TABLE IF NOT EXISTS `mydb`.`orders`
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
     ENGINE = InnoDB;
+=======
+CREATE TABLE IF NOT EXISTS `dominos`.`ingredients` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `price` DECIMAL(15,2) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`pizzas`
+-- Table `dominos`.`orders`
 -- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `dominos`.`orders` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `ordered_at` DATE NOT NULL,
+  `address_id` INT NOT NULL,
+  `instructions` VARCHAR(150) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `orders_users_fk_idx` (`user_id` ASC) VISIBLE,
+  INDEX `orders_addresses_fk_idx` (`address_id` ASC) VISIBLE,
+  CONSTRAINT `orders_addresses_fk`
+    FOREIGN KEY (`address_id`)
+    REFERENCES `dominos`.`addresses` (`id`),
+  CONSTRAINT `orders_users_fk`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `dominos`.`users` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+>>>>>>> a4e0cb0335596278e0a3f323204e5ce8d14d9c25:SQL_dominos.sql
+
+
+-- -----------------------------------------------------
+-- Table `dominos`.`other_products`
+-- -----------------------------------------------------
+<<<<<<< HEAD:dominos_er_script.sql
 CREATE TABLE IF NOT EXISTS `mydb`.`pizzas`
 (
     `id`
@@ -205,11 +273,22 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ingredients`
     `id`
 ))
     ENGINE = InnoDB;
+=======
+CREATE TABLE IF NOT EXISTS `dominos`.`other_products` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `price` DECIMAL(15,2) NOT NULL,
+  `image` VARCHAR(150) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+>>>>>>> a4e0cb0335596278e0a3f323204e5ce8d14d9c25:SQL_dominos.sql
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`other_products`
+-- Table `dominos`.`orders_have_other_products`
 -- -----------------------------------------------------
+<<<<<<< HEAD:dominos_er_script.sql
 CREATE TABLE IF NOT EXISTS `mydb`.`other_products`
 (
     `id`
@@ -228,11 +307,31 @@ CREATE TABLE IF NOT EXISTS `mydb`.`other_products`
     `id`
 ))
     ENGINE = InnoDB;
+=======
+CREATE TABLE IF NOT EXISTS `dominos`.`orders_have_other_products` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `order_id` INT NOT NULL,
+  `other_product_id` INT NOT NULL,
+  `amount` INT NOT NULL,
+  `price` DECIMAL(15,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `order_to_other_products_fk_idx` (`order_id` ASC) VISIBLE,
+  INDEX `other_products_fk_idx` (`other_product_id` ASC) VISIBLE,
+  CONSTRAINT `order_to_other_products_fk`
+    FOREIGN KEY (`order_id`)
+    REFERENCES `dominos`.`orders` (`id`),
+  CONSTRAINT `other_products_fk`
+    FOREIGN KEY (`other_product_id`)
+    REFERENCES `dominos`.`other_products` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+>>>>>>> a4e0cb0335596278e0a3f323204e5ce8d14d9c25:SQL_dominos.sql
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`pizza_sizes`
+-- Table `dominos`.`pizza_breads`
 -- -----------------------------------------------------
+<<<<<<< HEAD:dominos_er_script.sql
 CREATE TABLE IF NOT EXISTS `mydb`.`pizza_sizes`
 (
     `id`
@@ -272,11 +371,20 @@ CREATE TABLE IF NOT EXISTS `mydb`.`pizza_breads`
     `id`
 ))
     ENGINE = InnoDB;
+=======
+CREATE TABLE IF NOT EXISTS `dominos`.`pizza_breads` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `bread_type` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+>>>>>>> a4e0cb0335596278e0a3f323204e5ce8d14d9c25:SQL_dominos.sql
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`orders_have_pizzas`
+-- Table `dominos`.`pizzas`
 -- -----------------------------------------------------
+<<<<<<< HEAD:dominos_er_script.sql
 CREATE TABLE IF NOT EXISTS `mydb`.`orders_have_pizzas`
 (
     `id`
@@ -374,11 +482,51 @@ CREATE TABLE IF NOT EXISTS `mydb`.`orders_have_pizzas`
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
     ENGINE = InnoDB;
+=======
+CREATE TABLE IF NOT EXISTS `dominos`.`pizzas` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(150) NOT NULL,
+  `price` DECIMAL(15,2) NOT NULL,
+  `image` VARCHAR(150) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`orders_have_other_products`
+-- Table `dominos`.`orders_have_pizzas`
 -- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `dominos`.`orders_have_pizzas` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `order_id` INT NOT NULL,
+  `pizza_id` INT NOT NULL,
+  `amount` INT NOT NULL,
+  `price` DECIMAL(15,2) NOT NULL,
+  `pizza_breads_id` INT NOT NULL,
+  `pizza_sizes_id` DECIMAL(15,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `orders_pizzas_fk_idx` (`order_id` ASC) VISIBLE,
+  INDEX `pizzas_fk_idx` (`pizza_id` ASC) VISIBLE,
+  INDEX `pizza_breads_fk_idx` (`pizza_breads_id` ASC) VISIBLE,
+  INDEX `pizza_sizes_fk_idx` (`pizza_sizes_id` ASC) VISIBLE,
+  CONSTRAINT `orders_fk`
+    FOREIGN KEY (`order_id`)
+    REFERENCES `dominos`.`orders` (`id`),
+  CONSTRAINT `pizza_breads_fk`
+    FOREIGN KEY (`pizza_breads_id`)
+    REFERENCES `dominos`.`pizza_breads` (`id`),
+  CONSTRAINT `pizzas_fk`
+    FOREIGN KEY (`pizza_id`)
+    REFERENCES `dominos`.`pizzas` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+>>>>>>> a4e0cb0335596278e0a3f323204e5ce8d14d9c25:SQL_dominos.sql
+
+
+-- -----------------------------------------------------
+-- Table `dominos`.`pizza_sizes`
+-- -----------------------------------------------------
+<<<<<<< HEAD:dominos_er_script.sql
 CREATE TABLE IF NOT EXISTS `mydb`.`orders_have_other_products`
 (
     `id`
@@ -438,11 +586,20 @@ CREATE TABLE IF NOT EXISTS `mydb`.`orders_have_other_products`
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
     ENGINE = InnoDB;
+=======
+CREATE TABLE IF NOT EXISTS `dominos`.`pizza_sizes` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `size` INT NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+>>>>>>> a4e0cb0335596278e0a3f323204e5ce8d14d9c25:SQL_dominos.sql
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`pizzas_have_ingredients`
+-- Table `dominos`.`pizzas_have_ingredients`
 -- -----------------------------------------------------
+<<<<<<< HEAD:dominos_er_script.sql
 CREATE TABLE IF NOT EXISTS `mydb`.`pizzas_have_ingredients`
 (
     `pizza_id`
@@ -486,6 +643,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`pizzas_have_ingredients`
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
     ENGINE = InnoDB;
+=======
+CREATE TABLE IF NOT EXISTS `dominos`.`pizzas_have_ingredients` (
+  `pizza_id` INT NOT NULL,
+  `ingredient_id` INT NOT NULL,
+  INDEX `pizzas_have_ingredients_pizza_fk_idx` (`pizza_id` ASC) VISIBLE,
+  INDEX `pizzas_have_ingredients_ingredient_fk_idx` (`ingredient_id` ASC) VISIBLE,
+  CONSTRAINT `pizzas_have_ingredients_ingredient_fk`
+    FOREIGN KEY (`ingredient_id`)
+    REFERENCES `dominos`.`ingredients` (`id`),
+  CONSTRAINT `pizzas_have_ingredients_pizza_fk`
+    FOREIGN KEY (`pizza_id`)
+    REFERENCES `dominos`.`pizzas` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+>>>>>>> a4e0cb0335596278e0a3f323204e5ce8d14d9c25:SQL_dominos.sql
 
 
 SET
