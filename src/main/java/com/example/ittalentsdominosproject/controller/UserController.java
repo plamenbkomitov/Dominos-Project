@@ -14,17 +14,20 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping("/users/{id}")
+    public User getUserById(@PathVariable long id) {
+        User u = userRepository.findById(id).orElseThrow();
+        return u;
+    }
+
     @PostMapping("/users")
     public User register(@RequestBody User u) {
-
         userRepository.save(u);
         return u;
     }
 
-    @GetMapping("/users/{id}")
-
-    public User getUserById(@PathVariable long id) {
-        User u = userRepository.findById(id).orElseThrow();
-        return u;
+    @DeleteMapping("/users/{id}")
+    public void deleteUserById(@PathVariable long id) {
+       userRepository.deleteById(id);
     }
 }
