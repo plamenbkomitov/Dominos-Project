@@ -1,6 +1,6 @@
 package com.example.ittalentsdominosproject.controller;
 
-import com.example.ittalentsdominosproject.model.OtherProduct;
+import com.example.ittalentsdominosproject.model.entity.OtherProduct;
 import com.example.ittalentsdominosproject.repository.OtherProductRepository;
 import org.springframework.web.bind.annotation.*;
 

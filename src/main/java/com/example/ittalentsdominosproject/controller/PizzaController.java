@@ -1,6 +1,6 @@
 package com.example.ittalentsdominosproject.controller;
 
-import com.example.ittalentsdominosproject.model.Pizza;
+import com.example.ittalentsdominosproject.model.entity.Pizza;
 import com.example.ittalentsdominosproject.repository.PizzaRepository;
 import org.springframework.web.bind.annotation.*;
 

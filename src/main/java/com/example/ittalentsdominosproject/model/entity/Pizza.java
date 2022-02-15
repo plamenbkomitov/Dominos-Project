@@ -1,4 +1,4 @@
-package com.example.ittalentsdominosproject.model;
+package com.example.ittalentsdominosproject.model.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.ittalentsdominosproject.model;
+package com.example.ittalentsdominosproject.model.entity;
 
 import com.sun.istack.NotNull;
 import lombok.Data;

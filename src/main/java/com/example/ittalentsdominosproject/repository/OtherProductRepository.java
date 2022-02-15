@@ -1,6 +1,6 @@
 package com.example.ittalentsdominosproject.repository;
 
-import com.example.ittalentsdominosproject.model.OtherProduct;
+import com.example.ittalentsdominosproject.model.entity.OtherProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
