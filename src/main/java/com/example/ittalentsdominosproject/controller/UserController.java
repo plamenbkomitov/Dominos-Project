@@ -1,6 +1,6 @@
 package com.example.ittalentsdominosproject.controller;
 
-import com.example.ittalentsdominosproject.model.dto.UserLoginDTO;
+import com.example.ittalentsdominosproject.model.dto.UserReturnDTO;
 import com.example.ittalentsdominosproject.model.dto.UserRegistrationDTO;
 import com.example.ittalentsdominosproject.model.entity.User;
 import com.example.ittalentsdominosproject.repository.UserRepository;
@@ -13,25 +13,22 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 public class UserController {
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private UserService userService;
     @Autowired
     private ModelMapper modelMapper;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @PostMapping("/login")
-    public UserLoginDTO login(@RequestBody User u, HttpSession session) {
+    public UserReturnDTO login(@RequestBody User u, HttpSession session) {
         String email = u.getEmail();
         String password = u.getPassword();
         User user = userService.login(email,password);
         Long userId = user.getId();
         session.setAttribute("logged", userId);
-        UserLoginDTO userLoginDTO = modelMapper.map(user,UserLoginDTO.class);
-        return userLoginDTO;
+        UserReturnDTO userReturnDTO = modelMapper.map(user, UserReturnDTO.class);
+        return userReturnDTO;
     }
 
     @GetMapping("/users/{id}")
@@ -41,15 +38,20 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserLoginDTO register(@RequestBody UserRegistrationDTO u) {
+    public UserReturnDTO register(@RequestBody UserRegistrationDTO u) {
         User user = userService.register(u);
         userRepository.save(user);
-        UserLoginDTO userLoginDTO = modelMapper.map(user,UserLoginDTO.class);
-        return userLoginDTO;
+        UserReturnDTO userReturnDTO = modelMapper.map(user, UserReturnDTO.class);
+        return userReturnDTO;
+    }
+    @PostMapping("/logout")
+    public void logout(HttpSession session){
+        session.invalidate();
     }
 
     @DeleteMapping("/users/{id}")
     public void deleteUserById(@PathVariable long id) {
         userRepository.deleteById(id);
     }
+
 }

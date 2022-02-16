@@ -9,7 +9,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-public final class UserLoginDTO {
+public final class UserReturnDTO {
 
     private long id;
     private String firstName;
