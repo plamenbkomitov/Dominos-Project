@@ -28,6 +28,8 @@ public class UserController {
         String email = u.getEmail();
         String password = u.getPassword();
         User user = userService.login(email,password);
+        Long userId = user.getId();
+        session.setAttribute("logged", userId);
         UserLoginDTO userLoginDTO = modelMapper.map(user,UserLoginDTO.class);
         return userLoginDTO;
     }

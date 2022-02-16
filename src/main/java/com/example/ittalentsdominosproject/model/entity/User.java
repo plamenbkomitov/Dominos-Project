@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,5 +37,6 @@ public class User {
     @Column(name = "phone_number")
     private String phone;
 
-
+    @OneToMany(mappedBy = "user")
+    private List<Address> addresses;
 }
