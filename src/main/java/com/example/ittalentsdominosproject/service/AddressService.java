@@ -36,12 +36,22 @@ public class AddressService {
         return addressReturnDTO;
     }
 
-    public  List<AddressWithUserDTO> getAllAddresses(Optional<User> user) {
+    public List<AddressWithUserDTO> getAllAddresses(Optional<User> user) {
         List<AddressWithUserDTO> addressDto = new ArrayList<>();
         List<Address> address =  addressRepository.getAddressesByUser_Id(user.get().getId());
         for (Address a:address){
             addressDto.add(modelMapper.map(a,AddressWithUserDTO.class));
         }
         return addressDto;
+    }
+
+    public AddressReturnDTO chooseAddress(User user, int aId) {
+        Optional<Address> addressOptional = addressRepository.findById(aId);
+        if(addressOptional.isEmpty() || addressOptional.get().getUser().getId() !=
+                user.getId()) {
+            throw new NotFoundException("No address found!");
+        }
+        AddressReturnDTO addressReturnDTO = modelMapper.map(addressOptional.get(), AddressReturnDTO.class);
+        return addressReturnDTO;
     }
 }

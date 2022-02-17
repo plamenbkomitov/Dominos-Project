@@ -5,15 +5,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "addresses")
-public class Address {
+@Table(name = "orders")
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -22,10 +21,13 @@ public class Address {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "address_name")
-    private String addressName;
+    @Column(name = "ordered_at")
+    private LocalDate localDate;
 
-    @OneToMany(mappedBy = "address")
-    List<Order> orders;
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
 
+    @Column(name = "instructions")
+    private String instructions;
 }

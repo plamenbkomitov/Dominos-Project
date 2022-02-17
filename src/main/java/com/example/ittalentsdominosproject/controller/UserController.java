@@ -19,6 +19,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private SessionHelper sessionHelper;
 
     @PostMapping("/login")
     public UserReturnDTO login(@RequestBody User u, HttpSession session) {
@@ -26,7 +28,7 @@ public class UserController {
         String password = u.getPassword();
         User user = userService.login(email,password);
         Long userId = user.getId();
-        session.setAttribute("logged", userId);
+        sessionHelper.login(userId, session);
         UserReturnDTO userReturnDTO = modelMapper.map(user, UserReturnDTO.class);
         return userReturnDTO;
     }

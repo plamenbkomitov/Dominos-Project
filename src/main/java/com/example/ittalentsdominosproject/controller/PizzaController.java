@@ -24,14 +24,16 @@ public class PizzaController {
         return pizzaRepository.findAll();
     }
 
+    /*
     @PostMapping("pizza/")
     public Pizza addPizza(@RequestBody Pizza pizza) {
         return pizzaRepository.save(pizza);
-        //TODO add admin functionality?
     }
 
     @DeleteMapping("pizza/{id}")
     public void deletePizzaById(@PathVariable Long id) {
         pizzaRepository.deleteById(id);
     }
+*/
 }
+
