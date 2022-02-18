@@ -1,10 +1,12 @@
 package com.example.ittalentsdominosproject.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,5 +27,14 @@ public class Pizza {
 
     @Column(name = "image")
     private String image;
+
+    @JsonManagedReference
+    @ManyToMany
+    @JoinTable(
+            name = "pizzas_have_ingredients",
+            joinColumns = @JoinColumn(name = "pizza_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+    )
+    private List<Ingredient> ingredients;
 
 }
