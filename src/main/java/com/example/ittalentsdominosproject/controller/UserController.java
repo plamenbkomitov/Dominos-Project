@@ -1,5 +1,6 @@
 package com.example.ittalentsdominosproject.controller;
 
+import com.example.ittalentsdominosproject.model.dto.UserEditDTO;
 import com.example.ittalentsdominosproject.model.dto.UserReturnDTO;
 import com.example.ittalentsdominosproject.model.dto.UserRegistrationDTO;
 import com.example.ittalentsdominosproject.model.entity.User;
@@ -51,9 +52,18 @@ public class UserController {
         session.invalidate();
     }
 
-    @DeleteMapping("/users/{id}")
-    public void deleteUserById(@PathVariable long id) {
-        userRepository.deleteById(id);
+    @DeleteMapping("/users")
+    public void deleteUser(HttpSession session) {
+        sessionHelper.isLogged(session);
+        User user = sessionHelper.getUser(session);
+        userRepository.deleteById(user.getId());
     }
 
+    @PutMapping("/edit")
+    public void editUser(@RequestBody UserEditDTO userEditDTO, HttpSession session) {
+        sessionHelper.isLogged(session);
+        User user = sessionHelper.getUser(session);
+        userService.edit(user, userEditDTO);
+        userRepository.save(user);
+    }
 }

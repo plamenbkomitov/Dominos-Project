@@ -63,7 +63,6 @@ public class CartService {
 
         for (Map.Entry<OtherProduct, Integer> o : otherProductCart.entrySet()) {
             int quantity = o.getValue();
-            System.out.println(quantity);
             OtherProduct otherProduct = o.getKey();
             double price = otherProduct.getPrice() * quantity;
             OtherProductOrder otherProductOrder = new OtherProductOrder(order, otherProduct, quantity);
