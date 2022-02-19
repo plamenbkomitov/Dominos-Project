@@ -15,5 +15,4 @@ public class UserEditDTO {
     private String newPassword;
     private String confNewPassword;
     private String phone;
-
 }

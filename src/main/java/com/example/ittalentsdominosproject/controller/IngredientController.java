@@ -19,11 +19,13 @@ public class IngredientController {
     private ModelMapper modelMapper;
     @Autowired
     private IngredientService ingredientService;
+
     @PostMapping("/ingredients")
     public Ingredient addIngredient(@RequestBody IngredientDTO ingredient){
         Ingredient i = modelMapper.map(ingredient,Ingredient.class);
         return ingredientRepository.save(i);
     }
+
     @PutMapping("/ingredients/update/{id}")
     public Ingredient editIngredient(@PathVariable long id, @RequestBody IngredientDTO ingredient){
         Optional<Ingredient>i = ingredientRepository.findById(id);
@@ -34,5 +36,4 @@ public class IngredientController {
         ingredientRepository.save(ing);
         return ing;
     }
-
 }

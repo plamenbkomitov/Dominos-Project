@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "pizzas")
-
 public class Pizza {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,5 +35,4 @@ public class Pizza {
             inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
     private List<Ingredient> ingredients;
-
 }

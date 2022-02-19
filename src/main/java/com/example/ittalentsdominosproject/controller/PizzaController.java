@@ -43,6 +43,4 @@ public class PizzaController {
     public void deletePizzaById(@PathVariable Long id) {
         pizzaRepository.deleteById(id);
     }
-
 }
-

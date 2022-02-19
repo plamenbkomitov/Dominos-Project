@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @Setter
@@ -27,5 +26,4 @@ public class Address {
 
     @OneToMany(mappedBy = "address")
     List<Order> orders;
-
 }

@@ -49,7 +49,7 @@ public class UserService {
         infoValidator.firstNameValidate(u.getFirstName());
         infoValidator.firstNameValidate(u.getLastName());
         infoValidator.phoneValidate(u.getPhone());
-
+//        todo use mapper
         User user = new User();
         user.setFirstName(u.getFirstName());
         user.setLastName(u.getLastName());

@@ -2,17 +2,15 @@ package com.example.ittalentsdominosproject.controller;
 
 import com.example.ittalentsdominosproject.model.entity.OtherProduct;
 import com.example.ittalentsdominosproject.repository.OtherProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 public class OtherProductController {
-    private final OtherProductRepository otherProductRepository;
-
-    public OtherProductController(OtherProductRepository otherProductRepository) {
-        this.otherProductRepository = otherProductRepository;
-    }
+    @Autowired
+    private OtherProductRepository otherProductRepository;
 
     @GetMapping("/product/{id}")
     public OtherProduct getOtherProductById(@PathVariable Long id) {

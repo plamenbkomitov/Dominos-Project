@@ -63,5 +63,4 @@ public class SessionHelper {
     public void loadNewCart(HttpSession session) {
         session.setAttribute(OTHER_PRODUCT_CART, new HashMap<OtherProduct, Integer>());
     }
-
 }
