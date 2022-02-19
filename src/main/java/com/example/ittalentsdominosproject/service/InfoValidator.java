@@ -1,7 +1,12 @@
 package com.example.ittalentsdominosproject.service;
 
 import com.example.ittalentsdominosproject.exception.BadRequestException;
+import com.example.ittalentsdominosproject.model.dto.AddressRegistrationDTO;
+import com.example.ittalentsdominosproject.model.entity.Address;
+import com.example.ittalentsdominosproject.model.entity.User;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class InfoValidator {
@@ -37,6 +42,25 @@ public class InfoValidator {
         String phonePattern = "\\d+";
         if(!phone.matches(phonePattern)) {
             throw new BadRequestException("Enter a valid phone number!");
+        }
+    }
+
+    public void addressUniquenessValidate(AddressRegistrationDTO addressRegistrationDTO,
+                                          User user) {
+
+        List<Address> addresses = user.getAddresses();
+
+        for (Address address : addresses) {
+            if(address.getAddressName().trim().
+                    equalsIgnoreCase(addressRegistrationDTO.getAddressName())) {
+                throw new BadRequestException("Address must be unique!");
+            }
+        }
+    }
+
+    public void addressPresentValidate(String addressName) {
+        if(addressName == null || addressName.trim().equals("")) {
+            throw new BadRequestException("You must input an address!");
         }
     }
 }

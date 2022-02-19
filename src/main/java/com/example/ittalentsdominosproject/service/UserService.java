@@ -20,17 +20,18 @@ public class UserService {
     InfoValidator infoValidator;
 
     public User login(String email, String password) {
-        User u = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
+
         if(email == null || email.isBlank()){
             throw new BadRequestException("Username is mandatory");
         }
-        if(password == null || password.isBlank() || !passwordEncoder.matches(password,u.getPassword())){
-            throw new BadRequestException("Password is mandatory");
-        }
-        if(u == null){
+        if(user == null){
             throw new UnauthorizedException("Wrong credentials");
         }
-        return u;
+        if(password == null || password.isBlank() || !passwordEncoder.matches(password, user.getPassword())){
+            throw new BadRequestException("Password is mandatory");
+        }
+        return user;
     }
 
     public User register(UserRegistrationDTO u) {

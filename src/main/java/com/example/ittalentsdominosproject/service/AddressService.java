@@ -11,6 +11,7 @@ import com.example.ittalentsdominosproject.repository.AddressRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -18,17 +19,22 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class AddressService {
     @Autowired
     AddressRepository addressRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private InfoValidator infoValidator;
 
     public AddressReturnDTO addAddress(AddressRegistrationDTO addressRegistrationDTO, User user) {
         if(user == null) {
             throw new NotFoundException("No user found!");
         }
-        //TODO check if address already added
+        infoValidator.addressPresentValidate(addressRegistrationDTO.getAddressName());
+        infoValidator.addressUniquenessValidate(addressRegistrationDTO, user);
+
         Address address = modelMapper.map(addressRegistrationDTO, Address.class);
         address.setUser(user);
         addressRepository.save(address);
@@ -52,6 +58,36 @@ public class AddressService {
             throw new NotFoundException("No address found!");
         }
         AddressReturnDTO addressReturnDTO = modelMapper.map(addressOptional.get(), AddressReturnDTO.class);
+        return addressReturnDTO;
+    }
+
+    public AddressReturnDTO removeAddress(User user, int aId) {
+        Optional<Address> addressOptional = addressRepository.findById(aId);
+        if(addressOptional.isEmpty() || addressOptional.get().getUser().getId() !=
+                user.getId()) {
+            throw new NotFoundException("No address found!");
+        }
+
+        addressRepository.deleteById(aId);
+        AddressReturnDTO addressReturnDTO = modelMapper.map(addressOptional.get(), AddressReturnDTO.class);
+        return addressReturnDTO;
+    }
+
+    public AddressReturnDTO editAddress(User user, int aId,
+                                        AddressRegistrationDTO addressRegistrationDTO) {
+        Optional<Address> addressOptional = addressRepository.findById(aId);
+        if(addressOptional.isEmpty() || addressOptional.get().getUser().getId() !=
+                user.getId()) {
+            throw new NotFoundException("No address found!");
+        }
+
+        infoValidator.addressPresentValidate(addressRegistrationDTO.getAddressName());
+        infoValidator.addressUniquenessValidate(addressRegistrationDTO, user);
+
+        Address address = addressOptional.get();
+        address.setAddressName(addressRegistrationDTO.getAddressName());
+
+        AddressReturnDTO addressReturnDTO = modelMapper.map(address, AddressReturnDTO.class);
         return addressReturnDTO;
     }
 }

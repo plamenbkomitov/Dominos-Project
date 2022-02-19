@@ -21,7 +21,7 @@ public class CartController {
     private CartService cartService;
 
 
-    @PutMapping("/items/{itemId}")
+    @PostMapping("/items/{itemId}")
     public OtherProduct addOtherProductToCart(@PathVariable int itemId,
                                               HttpSession session) {
         sessionHelper.isLogged(session);

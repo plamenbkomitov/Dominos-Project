@@ -34,19 +34,13 @@ public class UserController {
         return userReturnDTO;
     }
 
-    @GetMapping("/users/{id}")
-    public User getUserById(@PathVariable long id) {
-        User u = userRepository.findById(id).orElseThrow();
-        return u;
-    }
-
     @PostMapping("/register")
     public UserReturnDTO register(@RequestBody UserRegistrationDTO u) {
         User user = userService.register(u);
         userRepository.save(user);
-        UserReturnDTO userReturnDTO = modelMapper.map(user, UserReturnDTO.class);
-        return userReturnDTO;
+        return modelMapper.map(user, UserReturnDTO.class);
     }
+
     @PostMapping("/logout")
     public void logout(HttpSession session){
         session.invalidate();

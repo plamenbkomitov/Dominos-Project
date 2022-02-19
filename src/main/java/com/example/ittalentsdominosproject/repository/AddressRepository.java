@@ -12,4 +12,6 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
     List<Address> getAddressesByUser_Id(long id);
 
     Optional<Address> findById(int aId);
+
+    void deleteById(int aId);
 }

@@ -46,4 +46,21 @@ public class AddressController {
         session.setAttribute(SessionHelper.ADDRESS, (int)aId);
         return addressReturnDTO;
     }
+
+    @DeleteMapping("/addresses/remove/{aId}")
+    public AddressReturnDTO removeAddress(@PathVariable long aId, HttpSession session) {
+        sessionHelper.isLogged(session);
+        User user = sessionHelper.getUser(session);
+        return addressService.removeAddress(user, (int)aId);
+    }
+
+    @PostMapping("addresses/edit/{aId}")
+    public AddressReturnDTO editAddress(
+            @PathVariable long aId,
+            @RequestBody AddressRegistrationDTO addressRegistrationDTO,
+            HttpSession session) {
+        sessionHelper.isLogged(session);
+        User user = sessionHelper.getUser(session);
+        return addressService.editAddress(user, (int)aId, addressRegistrationDTO);
+    }
 }
