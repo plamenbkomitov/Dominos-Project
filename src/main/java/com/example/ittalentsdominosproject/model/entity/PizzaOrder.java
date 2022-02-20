@@ -22,16 +22,23 @@ public class PizzaOrder {
 
     @ManyToOne
     @JoinColumn(name = "pizza_id")
-    private OtherProduct otherProduct;
+    private Pizza pizza;
 
     private int amount;
 
     @ManyToOne
     @JoinColumn(name = "pizza_breads_id")
-    private OtherProduct pizzaBread;
+    private PizzaBread pizzaBread;
 
     @ManyToOne
     @JoinColumn(name = "pizza_sizes_id")
-    private OtherProduct pizzaSize;
+    private PizzaSize pizzaSize;
 
+    public PizzaOrder(Order order, Pizza pizza, int amount, PizzaBread pizzaBread, PizzaSize pizzaSize) {
+        this.order = order;
+        this.pizza = pizza;
+        this.amount = amount;
+        this.pizzaBread = pizzaBread;
+        this.pizzaSize = pizzaSize;
+    }
 }

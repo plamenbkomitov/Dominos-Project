@@ -2,6 +2,7 @@ package com.example.ittalentsdominosproject.controller;
 
 import com.example.ittalentsdominosproject.exception.NotFoundException;
 import com.example.ittalentsdominosproject.exception.UnauthorizedException;
+import com.example.ittalentsdominosproject.model.dto.PizzaToCartDTO;
 import com.example.ittalentsdominosproject.model.entity.Address;
 import com.example.ittalentsdominosproject.model.entity.OtherProduct;
 import com.example.ittalentsdominosproject.model.entity.User;
@@ -23,6 +24,7 @@ public class SessionHelper {
 
     public static final String LOGGED = "logged";
     public static final String OTHER_PRODUCT_CART = "other_product_cart";
+    public static final String PIZZA_CART = "pizza_cart";
     public static final String ADDRESS = "address";
 
     public void isLogged (HttpSession session) {
@@ -62,5 +64,6 @@ public class SessionHelper {
 
     public void loadNewCart(HttpSession session) {
         session.setAttribute(OTHER_PRODUCT_CART, new HashMap<OtherProduct, Integer>());
+        session.setAttribute(PIZZA_CART, new HashMap<PizzaToCartDTO, Integer>());
     }
 }

@@ -27,6 +27,8 @@ public class Pizza {
     @Column(name = "image")
     private String image;
 
+
+
     @JsonManagedReference
     @ManyToMany
     @JoinTable(
