@@ -27,16 +27,15 @@ public class CartController {
     public OtherProduct addOtherProductToCart(@PathVariable int itemId,
                                               HttpSession session) {
         sessionHelper.isLogged(session);
-        HashMap<OtherProduct, Integer> otherProductCart =
-                (HashMap<OtherProduct, Integer>) session.getAttribute(SessionHelper.OTHER_PRODUCT_CART);
+        HashMap<OtherProduct, Integer> otherProductCart = sessionHelper.getOtherProductsCart(session);
+
         return cartService.addOtherProductToCart(itemId, otherProductCart);
     }
 
     @PostMapping("/addPizzasToCart")
     public PizzaToCartDTO addPizzaToCart(@RequestBody PizzaToCartDTO pizza, HttpSession session){
         sessionHelper.isLogged(session);
-        HashMap<PizzaToCartDTO,Integer>pizzaCart =
-                (HashMap<PizzaToCartDTO, Integer>) session.getAttribute(SessionHelper.PIZZA_CART);
+        HashMap<PizzaToCartDTO,Integer>pizzaCart = sessionHelper.getPizzasCart(session);
         return cartService.addPizzaToCart(pizza,pizzaCart);
     }
 
@@ -45,10 +44,8 @@ public class CartController {
     public List<ItemCartDTO> completeOrder(@RequestBody OrderInstructionsDTO orderInstructionsDTO, HttpSession session) {
         sessionHelper.isLogged(session);
 
-        HashMap<OtherProduct, Integer> otherProductCart =
-                (HashMap<OtherProduct, Integer>) session.getAttribute(SessionHelper.OTHER_PRODUCT_CART);
-        HashMap<PizzaToCartDTO,Integer>pizzaCart =
-                (HashMap<PizzaToCartDTO, Integer>) session.getAttribute(SessionHelper.PIZZA_CART);
+        HashMap<OtherProduct, Integer> otherProductCart = sessionHelper.getOtherProductsCart(session);
+        HashMap<PizzaToCartDTO,Integer>pizzaCart = sessionHelper.getPizzasCart(session);
 
         User user = sessionHelper.getUser(session);
         Address address = sessionHelper.getAddress(session);

@@ -66,4 +66,15 @@ public class SessionHelper {
         session.setAttribute(OTHER_PRODUCT_CART, new HashMap<OtherProduct, Integer>());
         session.setAttribute(PIZZA_CART, new HashMap<PizzaToCartDTO, Integer>());
     }
+
+
+    @SuppressWarnings("unchecked")
+    public HashMap<OtherProduct, Integer> getOtherProductsCart (HttpSession session) {
+        return (HashMap<OtherProduct, Integer>) session.getAttribute(SessionHelper.OTHER_PRODUCT_CART);
+    }
+
+    @SuppressWarnings("unchecked")
+    public HashMap<PizzaToCartDTO, Integer> getPizzasCart(HttpSession session) {
+        return (HashMap<PizzaToCartDTO, Integer>) session.getAttribute(SessionHelper.PIZZA_CART);
+    }
 }
