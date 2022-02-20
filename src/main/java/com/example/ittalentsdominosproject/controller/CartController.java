@@ -23,7 +23,7 @@ public class CartController {
     private CartService cartService;
 
 
-    @PostMapping("/items/{itemId}")
+    @PostMapping("/items/add/{itemId}")
     public OtherProduct addOtherProductToCart(@PathVariable int itemId,
                                               HttpSession session) {
         sessionHelper.isLogged(session);
@@ -32,13 +32,37 @@ public class CartController {
         return cartService.addOtherProductToCart(itemId, otherProductCart);
     }
 
-    @PostMapping("/addPizzasToCart")
+
+    @DeleteMapping("/items/reduce/{itemId}")
+    public OtherProduct ReduceOtherProductInCart(@PathVariable int itemId,
+                                              HttpSession session) {
+        sessionHelper.isLogged(session);
+        HashMap<OtherProduct, Integer> otherProductCart = sessionHelper.getOtherProductsCart(session);
+
+        return cartService.reduceOtherProductInCart(itemId, otherProductCart);
+    }
+
+    @PostMapping("/pizza/add")
     public PizzaToCartDTO addPizzaToCart(@RequestBody PizzaToCartDTO pizza, HttpSession session){
         sessionHelper.isLogged(session);
         HashMap<PizzaToCartDTO,Integer>pizzaCart = sessionHelper.getPizzasCart(session);
         return cartService.addPizzaToCart(pizza,pizzaCart);
     }
 
+    @DeleteMapping("/pizza/reduce")
+    public PizzaToCartDTO ReducePizzaInCart(@RequestBody PizzaToCartDTO pizza,
+                                                 HttpSession session) {
+        sessionHelper.isLogged(session);
+        HashMap<PizzaToCartDTO,Integer>pizzaCart = sessionHelper.getPizzasCart(session);
+
+        return cartService.reducePizzaInCart(pizza, pizzaCart);
+    }
+
+    @DeleteMapping("cart/clear")
+    public void clearCart(HttpSession session) {
+        sessionHelper.isLogged(session);
+        sessionHelper.loadNewCart(session);
+    }
 
     @PostMapping("/pay")
     public List<ItemCartDTO> completeOrder(@RequestBody OrderInstructionsDTO orderInstructionsDTO, HttpSession session) {
@@ -50,8 +74,14 @@ public class CartController {
         User user = sessionHelper.getUser(session);
         Address address = sessionHelper.getAddress(session);
 
-        List<ItemCartDTO> receipt = cartService.completeOrder(otherProductCart, address, user, orderInstructionsDTO,pizzaCart);
+        List<ItemCartDTO> receipt = cartService.completeOrder(otherProductCart, address, user, orderInstructionsDTO,pizzaCart, session);
         sessionHelper.loadNewCart(session);
        return receipt;
+    }
+
+    @GetMapping("/cart")
+    public List<ItemCartDTO> getCart(HttpSession session) {
+        sessionHelper.isLogged(session);
+        return cartService.getReceipt(session);
     }
 }

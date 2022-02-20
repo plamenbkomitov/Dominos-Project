@@ -38,8 +38,7 @@ public class AddressService {
         Address address = modelMapper.map(addressRegistrationDTO, Address.class);
         address.setUser(user);
         addressRepository.save(address);
-        AddressReturnDTO addressReturnDTO = modelMapper.map(address, AddressReturnDTO.class);
-        return addressReturnDTO;
+        return modelMapper.map(address, AddressReturnDTO.class);
     }
 
     public List<AddressWithUserDTO> getAllAddresses(Optional<User> user) {
@@ -57,8 +56,7 @@ public class AddressService {
                 user.getId()) {
             throw new NotFoundException("No address found!");
         }
-        AddressReturnDTO addressReturnDTO = modelMapper.map(addressOptional.get(), AddressReturnDTO.class);
-        return addressReturnDTO;
+        return modelMapper.map(addressOptional.get(), AddressReturnDTO.class);
     }
 
     public AddressReturnDTO removeAddress(User user, int aId) {
@@ -69,8 +67,7 @@ public class AddressService {
         }
 
         addressRepository.deleteById(aId);
-        AddressReturnDTO addressReturnDTO = modelMapper.map(addressOptional.get(), AddressReturnDTO.class);
-        return addressReturnDTO;
+        return modelMapper.map(addressOptional.get(), AddressReturnDTO.class);
     }
 
     public AddressReturnDTO editAddress(User user, int aId,
@@ -87,7 +84,6 @@ public class AddressService {
         Address address = addressOptional.get();
         address.setAddressName(addressRegistrationDTO.getAddressName());
 
-        AddressReturnDTO addressReturnDTO = modelMapper.map(address, AddressReturnDTO.class);
-        return addressReturnDTO;
+        return modelMapper.map(address, AddressReturnDTO.class);
     }
 }

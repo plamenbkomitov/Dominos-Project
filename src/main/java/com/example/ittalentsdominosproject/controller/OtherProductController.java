@@ -22,7 +22,6 @@ public class OtherProductController {
         return otherProductRepository.findAll();
     }
 
-    /*
     @PostMapping("/product")
     public void addOtherProduct(@RequestBody OtherProduct otherProduct) {
         otherProductRepository.save(otherProduct);
@@ -32,5 +31,4 @@ public class OtherProductController {
     public void deleteOtherProductById(@PathVariable Long id) {
         otherProductRepository.deleteById(id);
     }
-     */
 }
