@@ -46,6 +46,7 @@ public class ImageService {
 
     }
 
+
     @SneakyThrows
     public String uploadImage(MultipartFile image, Long id, Boolean isPizzaImage) {
         String extension = FilenameUtils.getExtension(image.getOriginalFilename());

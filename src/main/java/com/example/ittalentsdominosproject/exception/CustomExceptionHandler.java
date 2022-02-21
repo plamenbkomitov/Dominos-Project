@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
@@ -40,4 +41,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         dto.setStatus(HttpStatus.NOT_FOUND.value());
         return dto;
     }
+    @ExceptionHandler(value = MultipartException.class)
+    @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
+    @ResponseBody
+    public ErrorDTO handleMultipartException(Exception e) {
+        ErrorDTO dto = new ErrorDTO();
+        dto.setMessage("Image size is too large");
+        dto.setStatus(HttpStatus.PAYLOAD_TOO_LARGE.value());
+        return dto;
+    }
+
 }
