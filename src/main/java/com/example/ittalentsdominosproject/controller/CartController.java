@@ -5,7 +5,6 @@ import com.example.ittalentsdominosproject.model.dto.OrderInstructionsDTO;
 import com.example.ittalentsdominosproject.model.dto.PizzaToCartDTO;
 import com.example.ittalentsdominosproject.model.entity.Address;
 import com.example.ittalentsdominosproject.model.entity.OtherProduct;
-import com.example.ittalentsdominosproject.model.entity.Pizza;
 import com.example.ittalentsdominosproject.model.entity.User;
 import com.example.ittalentsdominosproject.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;

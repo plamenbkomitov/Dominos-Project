@@ -25,7 +25,7 @@ public class ImageService {
     private OtherProductRepository otherProductRepository;
 
     @SneakyThrows
-    public long downloadImage(String name, HttpServletResponse response, boolean isPizzaImage) {
+    public void downloadImage(String name, HttpServletResponse response, boolean isPizzaImage) {
         File file = new File("uploads" + File.separator + name);
         if (!file.exists()) {
             throw new NotFoundException("Image not found");
@@ -42,7 +42,7 @@ public class ImageService {
                 throw new BadRequestException("Image not found");
             }
         }
-        return Files.copy(file.toPath(), response.getOutputStream());
+        Files.copy(file.toPath(), response.getOutputStream());
 
     }
 
@@ -51,6 +51,16 @@ public class ImageService {
     public String uploadImage(MultipartFile image, Long id, Boolean isPizzaImage) {
         String extension = FilenameUtils.getExtension(image.getOriginalFilename());
         String name = System.nanoTime() + "." + extension;
+
+
+        if(extension == null) {
+            throw new BadRequestException("File type extension is missing");
+        }
+
+        if(!(extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png"))) {
+            throw new BadRequestException("File type not allowed");
+        }
+
         Files.copy(image.getInputStream(), new File("uploads" + File.separator + name).toPath());
         if (isPizzaImage) {
             Optional<Pizza> pizza = pizzaRepository.findById(id);

@@ -4,7 +4,6 @@ import com.example.ittalentsdominosproject.exception.NotFoundException;
 import com.example.ittalentsdominosproject.model.dto.AddressRegistrationDTO;
 import com.example.ittalentsdominosproject.model.dto.AddressReturnDTO;
 import com.example.ittalentsdominosproject.model.dto.AddressWithUserDTO;
-import com.example.ittalentsdominosproject.model.dto.UserReturnDTO;
 import com.example.ittalentsdominosproject.model.entity.Address;
 import com.example.ittalentsdominosproject.model.entity.User;
 import com.example.ittalentsdominosproject.repository.AddressRepository;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

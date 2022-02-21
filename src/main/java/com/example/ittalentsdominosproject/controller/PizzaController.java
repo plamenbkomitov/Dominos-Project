@@ -5,12 +5,10 @@ import com.example.ittalentsdominosproject.model.entity.Pizza;
 import com.example.ittalentsdominosproject.repository.PizzaRepository;
 import com.example.ittalentsdominosproject.service.ImageService;
 import com.example.ittalentsdominosproject.service.PizzaService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -44,13 +42,11 @@ public class PizzaController {
     @PostMapping("/pizza/image")
     public String uploadPizzaImage(@RequestParam(name = "file")MultipartFile image,
                                    @RequestParam(name = "pizza_id") Long id){
-        boolean isPizzaImage = true;
-        return imageService.uploadImage(image,id,isPizzaImage);
+        return imageService.uploadImage(image,id, true);
     }
     @GetMapping("/pizza/image/{name}")
     public void downloadImage(@PathVariable String name, HttpServletResponse response){
-        boolean isPizzaImage=true;
-        imageService.downloadImage(name,response,isPizzaImage);
+        imageService.downloadImage(name,response, true);
     }
 
     @DeleteMapping("/pizza/{id}")
