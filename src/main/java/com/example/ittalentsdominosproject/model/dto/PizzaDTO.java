@@ -8,6 +8,5 @@ import java.util.List;
 public class PizzaDTO {
     private String name;
     private Double price;
-    private String image;
     private List<Long> ingredientIds;
 }
