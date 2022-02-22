@@ -35,9 +35,8 @@ public class ImageService {
             if (pizza.isEmpty()) {
                 throw new BadRequestException("Image not found");
             }
-        }
-        else {
-            Optional<OtherProduct> otherProduct= otherProductRepository.findOtherProductByImage(name);
+        } else {
+            Optional<OtherProduct> otherProduct = otherProductRepository.findOtherProductByImage(name);
             if (otherProduct.isEmpty()) {
                 throw new BadRequestException("Image not found");
             }
@@ -53,11 +52,11 @@ public class ImageService {
         String name = System.nanoTime() + "." + extension;
 
 
-        if(extension == null) {
+        if (extension == null) {
             throw new BadRequestException("File type extension is missing");
         }
 
-        if(!(extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png"))) {
+        if (!(extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png"))) {
             throw new BadRequestException("File type not allowed");
         }
 

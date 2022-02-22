@@ -1,5 +1,6 @@
 package com.example.ittalentsdominosproject.service;
 
+import com.example.ittalentsdominosproject.exception.BadRequestException;
 import com.example.ittalentsdominosproject.exception.NotFoundException;
 import com.example.ittalentsdominosproject.model.dto.AddressRegistrationDTO;
 import com.example.ittalentsdominosproject.model.dto.AddressReturnDTO;
@@ -27,7 +28,7 @@ public class AddressService {
     private InfoValidator infoValidator;
 
     public AddressReturnDTO addAddress(AddressRegistrationDTO addressRegistrationDTO, User user) {
-        if(user == null) {
+        if (user == null) {
             throw new NotFoundException("No user found!");
         }
         infoValidator.addressPresentValidate(addressRegistrationDTO.getAddressName());
@@ -41,16 +42,19 @@ public class AddressService {
 
     public List<AddressWithUserDTO> getAllAddresses(Optional<User> user) {
         List<AddressWithUserDTO> addressDto = new ArrayList<>();
-        List<Address> address =  addressRepository.getAddressesByUser_Id(user.get().getId());
-        for (Address a:address){
-            addressDto.add(modelMapper.map(a,AddressWithUserDTO.class));
+        if(user.isEmpty()) {
+            throw new BadRequestException("User not found");
+        }
+        List<Address> address = addressRepository.getAddressesByUser_Id(user.get().getId());
+        for (Address a : address) {
+            addressDto.add(modelMapper.map(a, AddressWithUserDTO.class));
         }
         return addressDto;
     }
 
     public AddressReturnDTO chooseAddress(User user, int aId) {
         Optional<Address> addressOptional = addressRepository.findById(aId);
-        if(addressOptional.isEmpty() || addressOptional.get().getUser().getId() !=
+        if (addressOptional.isEmpty() || addressOptional.get().getUser().getId() !=
                 user.getId()) {
             throw new NotFoundException("No address found!");
         }
@@ -59,7 +63,7 @@ public class AddressService {
 
     public AddressReturnDTO removeAddress(User user, int aId) {
         Optional<Address> addressOptional = addressRepository.findById(aId);
-        if(addressOptional.isEmpty() || addressOptional.get().getUser().getId() !=
+        if (addressOptional.isEmpty() || addressOptional.get().getUser().getId() !=
                 user.getId()) {
             throw new NotFoundException("No address found!");
         }
@@ -71,7 +75,7 @@ public class AddressService {
     public AddressReturnDTO editAddress(User user, int aId,
                                         AddressRegistrationDTO addressRegistrationDTO) {
         Optional<Address> addressOptional = addressRepository.findById(aId);
-        if(addressOptional.isEmpty() || addressOptional.get().getUser().getId() !=
+        if (addressOptional.isEmpty() || addressOptional.get().getUser().getId() !=
                 user.getId()) {
             throw new NotFoundException("No address found!");
         }

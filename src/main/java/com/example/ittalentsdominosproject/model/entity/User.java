@@ -41,4 +41,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
+
+    @Column(name = "is_admin")
+    private Integer isAdmin;
 }

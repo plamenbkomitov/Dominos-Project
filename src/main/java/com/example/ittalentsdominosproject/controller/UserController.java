@@ -27,7 +27,7 @@ public class UserController {
     public UserReturnDTO login(@RequestBody User u, HttpSession session) {
         String email = u.getEmail();
         String password = u.getPassword();
-        User user = userService.login(email,password);
+        User user = userService.login(email, password);
         Long userId = user.getId();
         sessionHelper.login(userId, session);
         return modelMapper.map(user, UserReturnDTO.class);
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public void logout(HttpSession session){
+    public void logout(HttpSession session) {
         session.invalidate();
     }
 

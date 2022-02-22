@@ -1,5 +1,6 @@
 package com.example.ittalentsdominosproject.controller;
 
+import com.example.ittalentsdominosproject.exception.BadRequestException;
 import com.example.ittalentsdominosproject.exception.NotFoundException;
 import com.example.ittalentsdominosproject.exception.UnauthorizedException;
 import com.example.ittalentsdominosproject.model.dto.PizzaToCartDTO;
@@ -27,7 +28,14 @@ public class SessionHelper {
     public static final String PIZZA_CART = "pizza_cart";
     public static final String ADDRESS = "address";
 
-    public void isLogged (HttpSession session) {
+    public void isAdmin(HttpSession session) {
+        User user = this.getUser(session);
+        if(user.getIsAdmin() == null) {
+            throw new BadRequestException("You don't have privileges for this action");
+        }
+    }
+
+    public void isLogged(HttpSession session) {
         if (session.isNew() || session.getAttribute(LOGGED) == null) {
             throw new UnauthorizedException("You're not logged in!");
         }
@@ -41,14 +49,14 @@ public class SessionHelper {
     public User getUser(HttpSession session) {
         Long userId = (Long) session.getAttribute(LOGGED);
         Optional<User> user = userRepository.findById(userId);
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             throw new NotFoundException("No user exists!");
         }
         return user.get();
     }
 
     public Address getAddress(HttpSession session) {
-        if(session.getAttribute(ADDRESS) == null) {
+        if (session.getAttribute(ADDRESS) == null) {
             throw new NotFoundException("You must choose an address for your order!");
         }
 
@@ -56,7 +64,7 @@ public class SessionHelper {
         int aId = (int) session.getAttribute(ADDRESS);
 
         Optional<Address> address = addressRepository.findById(aId);
-        if(address.isEmpty()) {
+        if (address.isEmpty()) {
             throw new NotFoundException("No address chosen!");
         }
         return address.get();
@@ -69,7 +77,7 @@ public class SessionHelper {
 
 
     @SuppressWarnings("unchecked")
-    public HashMap<OtherProduct, Integer> getOtherProductsCart (HttpSession session) {
+    public HashMap<OtherProduct, Integer> getOtherProductsCart(HttpSession session) {
         return (HashMap<OtherProduct, Integer>) session.getAttribute(SessionHelper.OTHER_PRODUCT_CART);
     }
 

@@ -4,7 +4,6 @@ import com.example.ittalentsdominosproject.exception.NotFoundException;
 import com.example.ittalentsdominosproject.model.entity.Ingredient;
 import com.example.ittalentsdominosproject.model.entity.Pizza;
 import com.example.ittalentsdominosproject.repository.IngredientRepository;
-import com.example.ittalentsdominosproject.repository.PizzaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +15,12 @@ import java.util.Optional;
 public class PizzaService {
     @Autowired
     private IngredientRepository ingredientRepository;
-    @Autowired
-    private PizzaRepository pizzaRepository;
 
     public List<Ingredient> add(List<Long> ingredientIds) {
-        List<Ingredient> ing=new ArrayList<>();
-        for (int i = 0; i < ingredientIds.size(); i++) {
-            Optional<Ingredient> in = ingredientRepository.findById(ingredientIds.get(i));
-            if (!in.isPresent()){
+        List<Ingredient> ing = new ArrayList<>();
+        for (Long ingredientId : ingredientIds) {
+            Optional<Ingredient> in = ingredientRepository.findById(ingredientId);
+            if (in.isEmpty()) {
                 throw new NotFoundException("Ingredient not found");
             }
             Ingredient ingredient = in.get();
@@ -33,9 +30,9 @@ public class PizzaService {
     }
 
     public Double calcPrice(Pizza p) {
-        double price=0;
+        double price = 0;
         for (int i = 0; i < p.getIngredients().size(); i++) {
-            price+=p.getIngredients().get(i).getPrice();
+            price += p.getIngredients().get(i).getPrice();
         }
         return price;
     }

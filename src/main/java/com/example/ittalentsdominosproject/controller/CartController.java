@@ -73,7 +73,7 @@ public class CartController {
         User user = sessionHelper.getUser(session);
         Address address = sessionHelper.getAddress(session);
 
-        List<ItemCartDTO> receipt = cartService.completeOrder(otherProductCart, address, user, orderInstructionsDTO,pizzaCart, session);
+        List<ItemCartDTO> receipt = cartService.completeOrder(otherProductCart, address, user, orderInstructionsDTO,pizzaCart);
         sessionHelper.loadNewCart(session);
        return receipt;
     }
@@ -81,6 +81,6 @@ public class CartController {
     @GetMapping("/cart")
     public List<ItemCartDTO> getCart(HttpSession session) {
         sessionHelper.isLogged(session);
-        return cartService.getReceipt(session);
+        return cartService.getReceipt(sessionHelper.getOtherProductsCart(session), sessionHelper.getPizzasCart(session), null);
     }
 }

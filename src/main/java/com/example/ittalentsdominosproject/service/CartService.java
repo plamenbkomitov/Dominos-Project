@@ -1,6 +1,5 @@
 package com.example.ittalentsdominosproject.service;
 
-import com.example.ittalentsdominosproject.controller.SessionHelper;
 import com.example.ittalentsdominosproject.exception.BadRequestException;
 import com.example.ittalentsdominosproject.model.dto.ItemCartDTO;
 import com.example.ittalentsdominosproject.model.dto.OrderInstructionsDTO;
@@ -11,7 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -35,13 +33,11 @@ public class CartService {
     private IngredientRepository ingredientRepository;
     @Autowired
     private PizzaOrderRepository pizzaOrderRepository;
-    @Autowired
-    private SessionHelper sessionHelper;
 
     public List<ItemCartDTO> completeOrder(
-            HashMap<OtherProduct, Integer> otherProductCart,
-            Address address, User user, OrderInstructionsDTO orderInstructionsDTO,
-            HashMap<PizzaToCartDTO, Integer> pizzaCart, HttpSession session) {
+            final HashMap<OtherProduct, Integer> otherProductCart,
+            final Address address, final User user, final OrderInstructionsDTO orderInstructionsDTO,
+            final HashMap<PizzaToCartDTO, Integer> pizzaCart) {
         if (otherProductCart.isEmpty() && pizzaCart.isEmpty()) {
             throw new BadRequestException("Cart is empty!");
         }
@@ -52,21 +48,21 @@ public class CartService {
         order.setAddress(address);
         orderRepository.save(order);
 
-        List<ItemCartDTO> receipt = new ArrayList<>();
-
-        getOtherProductValue(otherProductCart, order, receipt, true);
-        getPizzaValue(pizzaCart, order, receipt, true);
-        return this.getReceipt(session);
+        return this.finishOrder(otherProductCart, pizzaCart, order);
     }
 
-    public List<ItemCartDTO> getReceipt(HttpSession session) {
+    private List<ItemCartDTO> finishOrder(final HashMap<OtherProduct, Integer> otherProductCart, final HashMap<PizzaToCartDTO, Integer> pizzaCart, final Order order) {
+        return getReceipt(otherProductCart, pizzaCart, order);
+    }
+
+    public List<ItemCartDTO> getReceipt(final HashMap<OtherProduct, Integer> otherProductCart, final HashMap<PizzaToCartDTO, Integer> pizzaCart, final Order order) {
         List<ItemCartDTO> receipt = new ArrayList<>();
-        this.getPizzaValue(sessionHelper.getPizzasCart(session), null, receipt, false);
-        this.getOtherProductValue(sessionHelper.getOtherProductsCart(session), null, receipt, false);
+        this.getPizzaValue(pizzaCart, order, receipt);
+        this.getOtherProductValue(otherProductCart, order, receipt);
         return receipt;
     }
 
-    private void getPizzaValue(HashMap<PizzaToCartDTO, Integer> pizzaCart, Order order, List<ItemCartDTO> receipt, boolean isOrder) {
+    private void getPizzaValue(final HashMap<PizzaToCartDTO, Integer> pizzaCart, final Order order, final List<ItemCartDTO> receipt) {
         for (Map.Entry<PizzaToCartDTO, Integer> p : pizzaCart.entrySet()) {
             int quantity = p.getValue();
             Optional<Pizza> pizza = pizzaRepository.findById((long) p.getKey().getPizza_id());
@@ -94,7 +90,8 @@ public class CartService {
                 ingredientPrice += ingredient.get().getPrice();
             }
             double totalPrice = ingredientPrice + pizzaBreadPrice + pizzaSizePrice + pizzaPrice;
-            if (isOrder) {
+
+            if (order != null) { // if this is an order, save to repository
                 pizzaOrderRepository.save(new PizzaOrder(order, pizza.get(), quantity, pizzaBread.get(), pizzaSize.get()));
             }
             receipt.add(new ItemCartDTO(pizza.get().getName(), totalPrice * quantity, quantity));
@@ -102,24 +99,22 @@ public class CartService {
 
     }
 
-    private void getOtherProductValue(HashMap<OtherProduct, Integer> otherProductCart, Order order, List<ItemCartDTO> receipt, boolean isOrder) {
+    private void getOtherProductValue(final HashMap<OtherProduct, Integer> otherProductCart, final Order order, final List<ItemCartDTO> receipt) {
         for (Map.Entry<OtherProduct, Integer> o : otherProductCart.entrySet()) {
             int quantity = o.getValue();
             OtherProduct otherProduct = o.getKey();
             double price = otherProduct.getPrice() * quantity;
-            OtherProductOrder otherProductOrder = new OtherProductOrder(order, otherProduct, quantity);
 
-            if (isOrder) {
-                otherProductOrderRepository.save(otherProductOrder);
+            if (order != null) { // if this is an order, save to repository
+                otherProductOrderRepository.save(new OtherProductOrder(order, otherProduct, quantity));
             }
-
             receipt.add(new ItemCartDTO(otherProduct.getName(), price, quantity));
         }
 
     }
 
-    public OtherProduct addOtherProductToCart(int itemId,
-                                              HashMap<OtherProduct, Integer> otherProductCart) {
+    public OtherProduct addOtherProductToCart(final int itemId,
+                                              final HashMap<OtherProduct, Integer> otherProductCart) {
         Optional<OtherProduct> optionalOtherProduct =
                 otherProductRepository.findById((long) itemId);
         if (optionalOtherProduct.isEmpty()) {
@@ -136,7 +131,7 @@ public class CartService {
         return otherProduct;
     }
 
-    public OtherProduct reduceOtherProductInCart(int itemId, HashMap<OtherProduct, Integer> otherProductCart) {
+    public OtherProduct reduceOtherProductInCart(final int itemId, final HashMap<OtherProduct, Integer> otherProductCart) {
         Optional<OtherProduct> otherProductOptional = otherProductRepository.findById((long) itemId);
         if (otherProductOptional.isEmpty()) {
             throw new BadRequestException("Requested item not found!");
@@ -157,7 +152,7 @@ public class CartService {
         return otherProduct;
     }
 
-    public PizzaToCartDTO addPizzaToCart(PizzaToCartDTO pizza, HashMap<PizzaToCartDTO, Integer> pizzaCart) {
+    public PizzaToCartDTO addPizzaToCart(final PizzaToCartDTO pizza, final HashMap<PizzaToCartDTO, Integer> pizzaCart) {
         Optional<Pizza> p = pizzaRepository.findById((long) pizza.getPizza_id());
         if (p.isEmpty()) {
             throw new BadRequestException("Required pizza not found");
@@ -171,7 +166,7 @@ public class CartService {
         return pizza;
     }
 
-    public PizzaToCartDTO reducePizzaInCart(PizzaToCartDTO pizza, HashMap<PizzaToCartDTO, Integer> pizzaCart) {
+    public PizzaToCartDTO reducePizzaInCart(final PizzaToCartDTO pizza, final HashMap<PizzaToCartDTO, Integer> pizzaCart) {
         Optional<Pizza> p = pizzaRepository.findById((long) pizza.getPizza_id());
         if (p.isEmpty()) {
             throw new BadRequestException("Required pizza not found");

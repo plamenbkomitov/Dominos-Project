@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -21,6 +22,8 @@ public class PizzaController {
     private ImageService imageService;
     @Autowired
     private PizzaService pizzaService;
+    @Autowired
+    private SessionHelper sessionHelper;
 
     @GetMapping("/pizza/{id}")
     public Pizza getByPizzaId(@PathVariable Long id) {
@@ -32,7 +35,9 @@ public class PizzaController {
         return pizzaRepository.findAll();
     }
     @PostMapping("/pizza")
-    public Pizza addPizza(@RequestBody PizzaDTO pizza) {
+    public Pizza addPizza(@RequestBody PizzaDTO pizza, HttpSession session) {
+        sessionHelper.isLogged(session);
+        sessionHelper.isAdmin(session);
         Pizza p = new Pizza();
         p.setName(pizza.getName());
         p.setIngredients(pizzaService.add(pizza.getIngredientIds()));
@@ -41,7 +46,9 @@ public class PizzaController {
     }
     @PostMapping("/pizza/image")
     public String uploadPizzaImage(@RequestParam(name = "file")MultipartFile image,
-                                   @RequestParam(name = "pizza_id") Long id){
+                                   @RequestParam(name = "pizza_id") Long id, HttpSession session) {
+        sessionHelper.isLogged(session);
+        sessionHelper.isAdmin(session);
         return imageService.uploadImage(image,id, true);
     }
     @GetMapping("/pizza/image/{name}")
@@ -50,7 +57,9 @@ public class PizzaController {
     }
 
     @DeleteMapping("/pizza/{id}")
-    public void deletePizzaById(@PathVariable Long id) {
+    public void deletePizzaById(@PathVariable Long id, HttpSession session) {
+        sessionHelper.isLogged(session);
+        sessionHelper.isAdmin(session);
         pizzaRepository.deleteById(id);
     }
 }
