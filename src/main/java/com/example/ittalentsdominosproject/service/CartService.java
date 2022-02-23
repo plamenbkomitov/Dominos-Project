@@ -5,18 +5,11 @@ import com.example.ittalentsdominosproject.model.dto.ItemCartDTO;
 import com.example.ittalentsdominosproject.model.dto.OrderInstructionsDTO;
 import com.example.ittalentsdominosproject.model.dto.PizzaToCartDTO;
 import com.example.ittalentsdominosproject.model.entity.*;
-import com.example.ittalentsdominosproject.model.entity.Address;
 import com.example.ittalentsdominosproject.repository.*;
-import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -61,7 +54,7 @@ public class CartService {
     }
 
     private List<ItemCartDTO> finishOrder(final HashMap<OtherProduct, Integer> otherProductCart, final HashMap<PizzaToCartDTO, Integer> pizzaCart, final Order order) {
-        String msg = emailService.formatMessage(otherProductCart,pizzaCart);
+        String msg = emailService.formatMessage(otherProductCart, pizzaCart);
         emailService.mailSender(msg);
         return getReceipt(otherProductCart, pizzaCart, order);
     }
@@ -176,6 +169,7 @@ public class CartService {
         }
         return pizza;
     }
+
     public PizzaToCartDTO reducePizzaInCart(final PizzaToCartDTO pizza, final HashMap<PizzaToCartDTO, Integer> pizzaCart) {
         Optional<Pizza> p = pizzaRepository.findById((long) pizza.getPizza_id());
         if (p.isEmpty()) {

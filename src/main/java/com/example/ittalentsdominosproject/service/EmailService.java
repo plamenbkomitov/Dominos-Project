@@ -45,8 +45,8 @@ public class EmailService {
         prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         prop.put("mail.smtp.socketFactory.fallback", "true");
 
-        String acc = "chavdargoranov00@gmail.com";
-        String pass = "petarberon";
+        String acc = "ivangeorgiev1932@gmail.com";
+        String pass = "";
 
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override
@@ -86,8 +86,8 @@ public class EmailService {
             text.append("Products: ");
             for (Map.Entry<OtherProduct, Integer> o : otherProductCart.entrySet()) {
                 text.append("<br>")
-                        .append(o.getKey().getName() + " x " + o.getValue())
-                        .append(" price "+(o.getValue()*o.getKey().getPrice()));
+                        .append(o.getKey().getName() + " x " + o.getValue());
+
             }
         }
         text.append("<br>");

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -42,5 +43,10 @@ public class IngredientController {
         Ingredient ing = ingredientService.updateIngredient(i.get(), ingredient);
         ingredientRepository.save(ing);
         return ing;
+    }
+
+    @GetMapping("/ingredients")
+    public List<Ingredient> getAllIngredients() {
+        return ingredientRepository.findAll();
     }
 }
