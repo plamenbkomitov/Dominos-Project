@@ -46,7 +46,7 @@ public class EmailService {
         prop.put("mail.smtp.socketFactory.fallback", "true");
 
         String acc = "chavdargoranov00@gmail.com";
-        String pass = "";
+        String pass = "petarberon";
 
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override
@@ -86,8 +86,8 @@ public class EmailService {
             text.append("Products: ");
             for (Map.Entry<OtherProduct, Integer> o : otherProductCart.entrySet()) {
                 text.append("<br>")
-                        .append(o.getKey().getName() + " x " + o.getValue());
-
+                        .append(o.getKey().getName() + " x " + o.getValue())
+                        .append(" price "+(o.getValue()*o.getKey().getPrice()));
             }
         }
         text.append("<br>");
@@ -102,7 +102,7 @@ public class EmailService {
                 }
                 text.append("<br>")
                         .append(pizza.get().getName() + " size " + pizzaSize.get().getSize() + " bread " + pizzaBread.get().getBread()+
-                                " price "+pizza.get().getPrice()+pizzaBread.get().getPrice()+pizzaSize.get().getPrice());
+                                " price "+(pizza.get().getPrice()+pizzaBread.get().getPrice()+pizzaSize.get().getPrice()));
             }
         }
         return text.toString();
