@@ -9,6 +9,7 @@ import com.example.ittalentsdominosproject.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -55,7 +56,7 @@ public class CartService {
 
     private List<ItemCartDTO> finishOrder(final HashMap<OtherProduct, Integer> otherProductCart, final HashMap<PizzaToCartDTO, Integer> pizzaCart, final Order order) {
         String msg = emailService.formatMessage(otherProductCart, pizzaCart);
-        emailService.mailSender(msg);
+        emailService.mailSender(msg); //TODO seperate thread
         return getReceipt(otherProductCart, pizzaCart, order);
     }
 
@@ -66,7 +67,8 @@ public class CartService {
         return receipt;
     }
 
-    private void getPizzaValue(final HashMap<PizzaToCartDTO, Integer> pizzaCart, final Order order, final List<ItemCartDTO> receipt) {
+    @Transactional
+    public void getPizzaValue(final HashMap<PizzaToCartDTO, Integer> pizzaCart, final Order order, final List<ItemCartDTO> receipt) {
         for (Map.Entry<PizzaToCartDTO, Integer> p : pizzaCart.entrySet()) {
             int quantity = p.getValue();
             Optional<Pizza> pizza = pizzaRepository.findById((long) p.getKey().getPizza_id());
@@ -87,7 +89,7 @@ public class CartService {
             double ingredientPrice = 0;
             List<Long> ingredients = p.getKey().getIngredients_ids();
             for (Long i : ingredients) {
-                Optional<Ingredient> ingredient = ingredientRepository.findById(Long.valueOf(i));
+                Optional<Ingredient> ingredient = ingredientRepository.findById(Long.valueOf(i));//TODO find all by id
                 if (ingredient.isEmpty()) {
                     throw new BadRequestException("Required ingredient not found");
                 }
@@ -103,7 +105,8 @@ public class CartService {
 
     }
 
-    private void getOtherProductValue(final HashMap<OtherProduct, Integer> otherProductCart, final Order order, final List<ItemCartDTO> receipt) {
+    @Transactional
+    public void getOtherProductValue(final HashMap<OtherProduct, Integer> otherProductCart, final Order order, final List<ItemCartDTO> receipt) {
         for (Map.Entry<OtherProduct, Integer> o : otherProductCart.entrySet()) {
             int quantity = o.getValue();
             OtherProduct otherProduct = o.getKey();

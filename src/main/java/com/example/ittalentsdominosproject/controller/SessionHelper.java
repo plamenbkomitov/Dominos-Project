@@ -42,6 +42,9 @@ public class SessionHelper {
     }
 
     public void login(Long userId, HttpSession session) {
+        if(session.getAttribute(LOGGED) != null) {
+            throw new BadRequestException("You're already logged in!");
+        }
         session.setAttribute(LOGGED, userId);
         this.loadNewCart(session);
     }

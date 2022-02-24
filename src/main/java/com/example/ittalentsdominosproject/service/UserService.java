@@ -28,9 +28,13 @@ public class UserService {
         if (user == null) {
             throw new UnauthorizedException("Wrong credentials");
         }
-        if (password == null || password.isBlank() || !passwordEncoder.matches(password, user.getPassword())) {
+        if (password == null || password.isBlank()) {
             throw new BadRequestException("Password is mandatory");
         }
+        if(!passwordEncoder.matches(password, user.getPassword())) {
+            throw new UnauthorizedException("Wrong credentials");
+        }
+
         return user;
     }
 
