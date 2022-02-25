@@ -6,6 +6,7 @@ import com.example.ittalentsdominosproject.model.dto.UserEditDTO;
 import com.example.ittalentsdominosproject.model.dto.UserRegistrationDTO;
 import com.example.ittalentsdominosproject.model.entity.User;
 import com.example.ittalentsdominosproject.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
     @Autowired
-    InfoValidator infoValidator;
+    private InfoValidator infoValidator;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public User login(String email, String password) {
         User user = userRepository.findByEmail(email);
@@ -53,12 +56,7 @@ public class UserService {
         infoValidator.firstNameValidate(u.getFirstName());
         infoValidator.firstNameValidate(u.getLastName());
         infoValidator.phoneValidate(u.getPhone());
-//        todo use mapper
-        User user = new User();
-        user.setFirstName(u.getFirstName());
-        user.setLastName(u.getLastName());
-        user.setEmail(u.getEmail());
-        user.setPhone(u.getPhone());
+        User user = modelMapper.map(u, User.class);
         user.setPassword(passwordEncoder.encode(u.getPassword()));
         return user;
     }

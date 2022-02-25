@@ -20,12 +20,12 @@ public class OtherProductController {
     @Autowired
     private SessionHelper sessionHelper;
 
-    @GetMapping("/product/{id}")
+    @GetMapping("/products/{id}")
     public OtherProduct getOtherProductById(@PathVariable Long id) {
         return otherProductRepository.findById(id).orElseThrow();
     }
 
-    @PostMapping("/product/image")
+    @PostMapping("/products/image")
     public String uploadOtherProductImage(@RequestParam(name = "file") MultipartFile image,
                                           @RequestParam(name = "product_id") Long id, HttpSession session) {
         sessionHelper.isLogged(session);
@@ -33,24 +33,24 @@ public class OtherProductController {
         return imageService.uploadImage(image, id, false);
     }
 
-    @GetMapping("/product/image/{name}")
+    @GetMapping("/products/image/{name}")
     public void downloadImage(@PathVariable String name, HttpServletResponse response) {
         imageService.downloadImage(name, response, false);
     }
 
-    @GetMapping("/product")
+    @GetMapping("/products")
     public List<OtherProduct> getAllOtherProducts() {
         return otherProductRepository.findAll();
     }
 
-    @PostMapping("/product")
+    @PostMapping("/products")
     public void addOtherProduct(@RequestBody OtherProduct otherProduct, HttpSession session) {
         sessionHelper.isLogged(session);
         sessionHelper.isAdmin(session);
         otherProductRepository.save(otherProduct);
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/products/{id}")
     public void deleteOtherProductById(@PathVariable Long id, HttpSession session) {
         sessionHelper.isLogged(session);
         sessionHelper.isAdmin(session);

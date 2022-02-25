@@ -45,14 +45,12 @@ public class UserController {
         session.invalidate();
     }
 
-    /*
     @DeleteMapping("/users")
     public void deleteUser(HttpSession session) {
         sessionHelper.isLogged(session);
         User user = sessionHelper.getUser(session);
         userRepository.deleteById(user.getId());
     }
-     */
 
     @PutMapping("/edit")
     public void editUser(@RequestBody UserEditDTO userEditDTO, HttpSession session) {

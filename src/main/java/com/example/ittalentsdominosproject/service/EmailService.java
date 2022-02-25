@@ -1,11 +1,10 @@
 package com.example.ittalentsdominosproject.service;
 
+import com.example.ittalentsdominosproject.exception.BadRequestException;
 import com.example.ittalentsdominosproject.exception.NotFoundException;
 import com.example.ittalentsdominosproject.model.dto.PizzaToCartDTO;
-import com.example.ittalentsdominosproject.model.entity.OtherProduct;
-import com.example.ittalentsdominosproject.model.entity.Pizza;
-import com.example.ittalentsdominosproject.model.entity.PizzaBread;
-import com.example.ittalentsdominosproject.model.entity.PizzaSize;
+import com.example.ittalentsdominosproject.model.entity.*;
+import com.example.ittalentsdominosproject.repository.IngredientRepository;
 import com.example.ittalentsdominosproject.repository.PizzaBreadRepository;
 import com.example.ittalentsdominosproject.repository.PizzaRepository;
 import com.example.ittalentsdominosproject.repository.PizzaSizeRepository;
@@ -18,10 +17,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.*;
 
 @Service
 public class EmailService {
@@ -31,6 +28,8 @@ public class EmailService {
     private PizzaSizeRepository pizzaSizeRepository;
     @Autowired
     private PizzaBreadRepository pizzaBreadRepository;
+    @Autowired
+    private IngredientRepository ingredientRepository;
 
     @SneakyThrows
     public void mailSender(String msg) {
@@ -85,10 +84,9 @@ public class EmailService {
         if (otherProductCart != null) {
             text.append("Products: ");
             for (Map.Entry<OtherProduct, Integer> o : otherProductCart.entrySet()) {
-                text.append("<br>")
-                        .append(o.getKey().getName() + " x " + o.getValue());
-
+                text.append("<br>").append(o.getKey().getName()).append(" x ").append(o.getValue()).append(" price ").append(o.getKey().getPrice()*o.getValue());
             }
+
         }
         text.append("<br>");
         if (pizzaCart != null) {
@@ -100,9 +98,14 @@ public class EmailService {
                 if (pizza.isEmpty() || pizzaSize.isEmpty() || pizzaBread.isEmpty()) {
                     throw new NotFoundException("Pizza not found");
                 }
-                text.append("<br>")
-                        .append(pizza.get().getName() + " size " + pizzaSize.get().getSize() + " bread " + pizzaBread.get().getBread()+
-                                " price "+(pizza.get().getPrice()+pizzaBread.get().getPrice()+pizzaSize.get().getPrice()));
+                List<Ingredient> ingredients = ingredientRepository.findAllById(p.getKey().getIngredients_ids());
+                double ingredientPrice = 0;
+                for (Ingredient in : ingredients) {
+                    ingredientPrice += in.getPrice();
+                }
+                text.append("<br>").append(pizza.get().getName()).append(" size ").append(pizzaSize.get().getSize()).append(" bread ").
+                        append(pizzaBread.get().getBread()).append(" price ").
+                        append((ingredientPrice + pizza.get().getPrice() + pizzaBread.get().getPrice() + pizzaSize.get().getPrice()) * p.getValue());
             }
         }
         return text.toString();

@@ -37,7 +37,7 @@ public class AddressController {
         return addressService.getAllAddresses(user);
     }
 
-    @PutMapping("/addresses/choose/{aId}")
+    @PutMapping("/addresses/{aId}")
     public AddressReturnDTO chooseAddress(@PathVariable long aId, HttpSession session) {
         sessionHelper.isLogged(session);
         User user = sessionHelper.getUser(session);
@@ -46,14 +46,14 @@ public class AddressController {
         return addressReturnDTO;
     }
 
-    @DeleteMapping("/addresses/remove/{aId}")
+    @DeleteMapping("/addresses/{aId}")
     public AddressReturnDTO removeAddress(@PathVariable long aId, HttpSession session) {
         sessionHelper.isLogged(session);
         User user = sessionHelper.getUser(session);
         return addressService.removeAddress(user, (int) aId);
     }
 
-    @PostMapping("addresses/edit/{aId}")
+    @PostMapping("addresses/{aId}")
     public AddressReturnDTO editAddress(
             @PathVariable long aId,
             @RequestBody AddressRegistrationDTO addressRegistrationDTO,

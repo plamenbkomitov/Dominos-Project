@@ -32,7 +32,7 @@ public class IngredientController {
         return ingredientRepository.save(i);
     }
 
-    @PutMapping("/ingredients/update/{id}")
+    @PutMapping("/ingredients/{id}")
     public Ingredient editIngredient(@PathVariable long id, @RequestBody IngredientDTO ingredient, HttpSession session) {
         sessionHelper.isLogged(session);
         sessionHelper.isAdmin(session);

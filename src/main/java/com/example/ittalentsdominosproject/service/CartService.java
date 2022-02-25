@@ -17,11 +17,11 @@ import java.util.*;
 @Service
 public class CartService {
     @Autowired
-    OtherProductRepository otherProductRepository;
+    private OtherProductRepository otherProductRepository;
     @Autowired
-    OrderRepository orderRepository;
+    private OrderRepository orderRepository;
     @Autowired
-    OtherProductOrderRepository otherProductOrderRepository;
+    private OtherProductOrderRepository otherProductOrderRepository;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
@@ -89,13 +89,9 @@ public class CartService {
             }
             double pizzaSizePrice = pizzaSize.get().getPrice();
             double ingredientPrice = 0;
-            List<Long> ingredients = p.getKey().getIngredients_ids();
-            for (Long i : ingredients) {
-                Optional<Ingredient> ingredient = ingredientRepository.findById(Long.valueOf(i));//TODO find all by id
-                if (ingredient.isEmpty()) {
-                    throw new BadRequestException("Required ingredient not found");
-                }
-                ingredientPrice += ingredient.get().getPrice();
+            List<Ingredient> ingredients = ingredientRepository.findAllById(p.getKey().getIngredients_ids());
+            for (Ingredient in : ingredients) {
+                ingredientPrice += in.getPrice();
             }
             double totalPrice = ingredientPrice + pizzaBreadPrice + pizzaSizePrice + pizzaPrice;
 

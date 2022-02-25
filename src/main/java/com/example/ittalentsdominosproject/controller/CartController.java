@@ -10,7 +10,6 @@ import com.example.ittalentsdominosproject.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +21,7 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @PostMapping("/items/add/{itemId}")
+    @PostMapping("/cart/products/{itemId}")
     public OtherProduct addOtherProductToCart(@PathVariable int itemId,
                                               HttpSession session) {
         sessionHelper.isLogged(session);
@@ -32,32 +31,32 @@ public class CartController {
     }
 
 
-    @DeleteMapping("/items/reduce/{itemId}")
+    @DeleteMapping("/cart/products/{itemId}")
     public OtherProduct ReduceOtherProductInCart(@PathVariable int itemId,
-                                              HttpSession session) {
+                                                 HttpSession session) {
         sessionHelper.isLogged(session);
         HashMap<OtherProduct, Integer> otherProductCart = sessionHelper.getOtherProductsCart(session);
 
         return cartService.reduceOtherProductInCart(itemId, otherProductCart);
     }
 
-    @PostMapping("/pizza/add")
-    public PizzaToCartDTO addPizzaToCart(@RequestBody PizzaToCartDTO pizza, HttpSession session){
+    @PostMapping("/cart/pizzas")
+    public PizzaToCartDTO addPizzaToCart(@RequestBody PizzaToCartDTO pizza, HttpSession session) {
         sessionHelper.isLogged(session);
-        HashMap<PizzaToCartDTO,Integer>pizzaCart = sessionHelper.getPizzasCart(session);
-        return cartService.addPizzaToCart(pizza,pizzaCart);
+        HashMap<PizzaToCartDTO, Integer> pizzaCart = sessionHelper.getPizzasCart(session);
+        return cartService.addPizzaToCart(pizza, pizzaCart);
     }
 
-    @DeleteMapping("/pizza/reduce")
+    @DeleteMapping("/cart/pizzas")
     public PizzaToCartDTO ReducePizzaInCart(@RequestBody PizzaToCartDTO pizza,
-                                                 HttpSession session) {
+                                            HttpSession session) {
         sessionHelper.isLogged(session);
-        HashMap<PizzaToCartDTO,Integer>pizzaCart = sessionHelper.getPizzasCart(session);
+        HashMap<PizzaToCartDTO, Integer> pizzaCart = sessionHelper.getPizzasCart(session);
 
         return cartService.reducePizzaInCart(pizza, pizzaCart);
     }
 
-    @DeleteMapping("cart/clear")
+    @DeleteMapping("/cart")
     public void clearCart(HttpSession session) {
         sessionHelper.isLogged(session);
         sessionHelper.loadNewCart(session);
@@ -68,14 +67,14 @@ public class CartController {
         sessionHelper.isLogged(session);
 
         HashMap<OtherProduct, Integer> otherProductCart = sessionHelper.getOtherProductsCart(session);
-        HashMap<PizzaToCartDTO,Integer>pizzaCart = sessionHelper.getPizzasCart(session);
+        HashMap<PizzaToCartDTO, Integer> pizzaCart = sessionHelper.getPizzasCart(session);
 
         User user = sessionHelper.getUser(session);
         Address address = sessionHelper.getAddress(session);
 
-        List<ItemCartDTO> receipt = cartService.completeOrder(otherProductCart, address, user, orderInstructionsDTO,pizzaCart);
+        List<ItemCartDTO> receipt = cartService.completeOrder(otherProductCart, address, user, orderInstructionsDTO, pizzaCart);
         sessionHelper.loadNewCart(session);
-       return receipt;
+        return receipt;
     }
 
     @GetMapping("/cart")

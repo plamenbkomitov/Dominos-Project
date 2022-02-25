@@ -21,7 +21,7 @@ import java.util.Optional;
 @Transactional
 public class AddressService {
     @Autowired
-    AddressRepository addressRepository;
+    private AddressRepository addressRepository;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired

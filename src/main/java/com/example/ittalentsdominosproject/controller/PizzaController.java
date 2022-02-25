@@ -25,16 +25,17 @@ public class PizzaController {
     @Autowired
     private SessionHelper sessionHelper;
 
-    @GetMapping("/pizza/{id}")
+    @GetMapping("/pizzas/{id}")
     public Pizza getByPizzaId(@PathVariable Long id) {
         return pizzaRepository.findById(id).orElseThrow();
     }
 
-    @GetMapping("/pizza")
+    @GetMapping("/pizzas")
     public List<Pizza> getAllPizzas() {
         return pizzaRepository.findAll();
     }
-    @PostMapping("/pizza")
+
+    @PostMapping("/pizzas")
     public Pizza addPizza(@RequestBody PizzaDTO pizza, HttpSession session) {
         sessionHelper.isLogged(session);
         sessionHelper.isAdmin(session);
@@ -44,19 +45,21 @@ public class PizzaController {
         p.setPrice(pizzaService.calcPrice(p));
         return pizzaRepository.save(p);
     }
-    @PostMapping("/pizza/image")
-    public String uploadPizzaImage(@RequestParam(name = "file")MultipartFile image,
+
+    @PostMapping("/pizzas/image")
+    public String uploadPizzaImage(@RequestParam(name = "file") MultipartFile image,
                                    @RequestParam(name = "pizza_id") Long id, HttpSession session) {
         sessionHelper.isLogged(session);
         sessionHelper.isAdmin(session);
-        return imageService.uploadImage(image,id, true);
-    }
-    @GetMapping("/pizza/image/{name}")
-    public void downloadImage(@PathVariable String name, HttpServletResponse response){
-        imageService.downloadImage(name,response, true);
+        return imageService.uploadImage(image, id, true);
     }
 
-    @DeleteMapping("/pizza/{id}")
+    @GetMapping("/pizzas/image/{name}")
+    public void downloadImage(@PathVariable String name, HttpServletResponse response) {
+        imageService.downloadImage(name, response, true);
+    }
+
+    @DeleteMapping("/pizzas/{id}")
     public void deletePizzaById(@PathVariable Long id, HttpSession session) {
         sessionHelper.isLogged(session);
         sessionHelper.isAdmin(session);
