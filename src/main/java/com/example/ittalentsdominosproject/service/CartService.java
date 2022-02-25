@@ -55,8 +55,10 @@ public class CartService {
     }
 
     private List<ItemCartDTO> finishOrder(final HashMap<OtherProduct, Integer> otherProductCart, final HashMap<PizzaToCartDTO, Integer> pizzaCart, final Order order) {
-        String msg = emailService.formatMessage(otherProductCart, pizzaCart);
-        emailService.mailSender(msg); //TODO seperate thread
+        new Thread(() -> {
+            String msg = emailService.formatMessage(otherProductCart, pizzaCart);
+            emailService.mailSender(msg);
+        }).start();
         return getReceipt(otherProductCart, pizzaCart, order);
     }
 
