@@ -54,8 +54,7 @@ public class AddressService {
 
     public AddressReturnDTO chooseAddress(User user, int aId) {
         Optional<Address> addressOptional = addressRepository.findById(aId);
-        if (addressOptional.isEmpty() || addressOptional.get().getUser().getId() !=
-                user.getId()) {
+        if (addressOptional.isEmpty() || addressOptional.get().getUser().getId() != user.getId()) {
             throw new NotFoundException("No address found!");
         }
         return modelMapper.map(addressOptional.get(), AddressReturnDTO.class);
